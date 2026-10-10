@@ -62,3 +62,22 @@ L'essentiel du délai correspond à l'attente de sécurité (*fencing*) pendant 
 ## Auteur
 
 **Charles Maduba** — stagiaire Administrateur d'Infrastructures Sécurisées, GRETA de l'Essonne (2026)
+
+---
+
+## English summary
+
+**Context.** Santélia is a case study of a private healthcare group running three clinics in France. A server failure stopped one site for more than 6 hours and blocked online appointments. The goal is to make the infrastructure more reliable (backups, monitoring, service continuity) on a small budget and with a two-person IT team.
+
+**What I built.** A 3-node **Proxmox VE** cluster (virtualized in VirtualBox) with:
+- cluster creation and a live **quorum** experiment (2 of 3 nodes keep the cluster running, 1 of 3 blocks it to prevent split-brain);
+- **NFS shared storage** available on all three nodes, so a VM can run on any of them;
+- **high availability (HA)**: a VM is protected by `ha-manager`, with a software watchdog for fencing.
+
+**Key result.** After a hard power-off of the node running the VM, HA restarted it on another node automatically. **Measured RTO: 2 min 17 s**, compared with the 6+ hour outage in the case study.
+
+**Lessons learned.** Limited host resources (a VM crash during a 32 GB disk copy), a cluster filesystem stuck in read-only mode, and clock drift after the host went to sleep, which showed that time synchronization (NTP) is essential in a cluster. I also identified a single point of failure: the NFS share hosted on one node.
+
+**Skills.** Requirements specification, Proxmox VE clustering (corosync, quorum, HA, fencing), Linux NFS, log-based troubleshooting (`journalctl`, `pvecm`, `ha-manager`), business continuity and disaster recovery concepts (RTO / RPO).
+
+*The full documents (requirements specification and lab report) are written in French.*
