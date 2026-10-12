@@ -15,6 +15,11 @@ Le Groupe Santélia (cas d'étude) exploite trois cliniques privées en Essonne.
 | [`docs/Cahier_des_charges_Santelia.pdf`](docs/Cahier_des_charges_Santelia.pdf) | Cahier des charges fonctionnel et technique : besoins, exigences, architecture cible, sauvegarde 3-2-1, supervision (Zabbix), automatisation (Ansible), sécurité HDS, benchmark (Proxmox Backup Server), planning et recette |
 | [`docs/TP_HAPCA_Santelia_Charles.pdf`](docs/TP_HAPCA_Santelia_Charles.pdf) | Compte rendu du TP « HD/PCA » : construction d'un cluster Proxmox de 3 nœuds et test de panne, avec captures d'écran |
 | [`docs/TP_HAPCA_Santelia_Charles.docx`](docs/TP_HAPCA_Santelia_Charles.docx) | Même compte rendu, format Word |
+| [`docs/TP_HAPCA_SeanceB_Santelia_Charles_FR.pdf`](docs/TP_HAPCA_SeanceB_Santelia_Charles_FR.pdf) | Compte rendu de la séance B : sauvegarde, restauration, RPO et plan de reprise d'activité (PRA) |
+| [`docs/TP_HAPCA_SeanceB_Santelia_Charles_EN.pdf`](docs/TP_HAPCA_SeanceB_Santelia_Charles_EN.pdf) | Session B report (English version) |
+| [`docs/TP_HAPCA_Santelia_Charles_EN.pdf`](docs/TP_HAPCA_Santelia_Charles_EN.pdf) | Session A report (English version) |
+| [`docs/Key_concepts_Santelia.pdf`](docs/Key_concepts_Santelia.pdf) | Fiche de révision (EN) : CDC, clustering Proxmox, NFS, journaux, PCA/PRA |
+| [`docs/Key_concepts_SeanceB.pdf`](docs/Key_concepts_SeanceB.pdf) | Fiche de révision (EN) : sauvegarde, restauration, règle 3-2-1, RTO/RPO, PRA |
 
 ## Le lab : cluster Proxmox VE de 3 nœuds
 
@@ -51,6 +56,19 @@ L'essentiel du délai correspond à l'attente de sécurité (*fencing*) pendant 
 - **Dérive d'horloge** après une mise en veille de l'hôte : la HA a signalé `detected time drift`. La correction a déclenché l'auto-protection (watchdog) d'un nœud, puis la HA a tout remis en ordre seule. Leçon : la synchronisation NTP est indispensable dans un cluster.
 - **Point d'amélioration identifié** : le partage NFS hébergé sur un des nœuds est un point unique de défaillance ; en production, il faudrait un stockage partagé redondant (NAS en HA ou Ceph).
 
+## Séance B — Sauvegarde, restauration et plan de reprise
+
+La haute disponibilité ne protège ni contre une VM supprimée, ni contre un rançongiciel, ni contre la perte du stockage. La séance B ajoute donc la sauvegarde et le plan de reprise.
+
+| Étape | Résultat |
+|---|---|
+| Sauvegarde manuelle (`vzdump`, mode snapshot, ZSTD) | 10 s, la VM reste en service |
+| Restauration de test sous un autre ID (`qmrestore --unique`) | 3,6 s, VM démarrée puis supprimée |
+| Sauvegarde automatique | Chaque jour à 21:00, 7 sauvegardes conservées |
+| RPO | ≈ 0 en cas de panne d'un nœud (HA) ; jusqu'à 24 h en cas de restauration depuis la sauvegarde |
+| Règle 3-2-1 | Non respectée dans le lab (tout est sur un seul PC) : il faudrait un serveur de sauvegarde séparé et une copie hors site |
+| PRA de Santélia | Périmètre, scénarios, procédure de restauration, rôles, objectifs comparés aux mesures, tests |
+
 ## Compétences mises en œuvre
 
 - Rédaction d'un cahier des charges (besoins, exigences, benchmark, planning, recette)
@@ -58,6 +76,7 @@ L'essentiel du délai correspond à l'attente de sécurité (*fencing*) pendant 
 - Stockage partagé NFS sous Linux (Debian)
 - Diagnostic à partir des journaux (`journalctl`, `pvecm status`, `ha-manager status`)
 - Notions de continuité et de reprise d'activité (PCA / PRA, RTO / RPO)
+- Sauvegarde et restauration Proxmox (`vzdump`, `qmrestore`, tâches planifiées, rétention), règle 3-2-1, rédaction d'un PRA
 
 ## Auteur
 
@@ -80,4 +99,6 @@ L'essentiel du délai correspond à l'attente de sécurité (*fencing*) pendant 
 
 **Skills.** Requirements specification, Proxmox VE clustering (corosync, quorum, HA, fencing), Linux NFS, log-based troubleshooting (`journalctl`, `pvecm`, `ha-manager`), business continuity and disaster recovery concepts (RTO / RPO).
 
-*The full documents (requirements specification and lab report) are written in French.*
+**Session B: backup and disaster recovery.** HA does not protect against deletion, ransomware or storage loss, so session B added backups: a manual snapshot backup (10 s, VM kept running), a proven test restore under another VM ID (3.6 s), a daily scheduled job at 21:00 keeping 7 backups, an RPO analysis per scenario, and a written disaster recovery plan (DRP) for Santélia. The lab does not meet the 3-2-1 rule (everything runs on one PC), which the report states explicitly.
+
+*The requirements specification and the original reports are in French; English versions of both lab reports and two study guides are in `docs/`.*
