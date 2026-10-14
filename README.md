@@ -13,6 +13,8 @@ Le Groupe Santélia (cas d'étude) exploite trois cliniques privées en Essonne.
 | Document | Description |
 |---|---|
 | [`docs/Cahier_des_charges_Santelia.pdf`](docs/Cahier_des_charges_Santelia.pdf) | Cahier des charges fonctionnel et technique : besoins, exigences, architecture cible, sauvegarde 3-2-1, supervision (Zabbix), automatisation (Ansible), sécurité HDS, benchmark (Proxmox Backup Server), planning et recette |
+| [`docs/TP_HAPCA_SeanceA-B_Charles_Maduba_FR.pdf`](docs/TP_HAPCA_SeanceA-B_Charles_Maduba_FR.pdf) | **Compte rendu final (séances A et B réunies)** : RTO et RPO mesurés, calculés et comparés à des cibles justifiées |
+| [`docs/TP_HAPCA_SessionA-B_Charles_Maduba_EN.pdf`](docs/TP_HAPCA_SessionA-B_Charles_Maduba_EN.pdf) | Final report, sessions A and B (English version) |
 | [`docs/TP_HAPCA_Santelia_Charles.pdf`](docs/TP_HAPCA_Santelia_Charles.pdf) | Compte rendu du TP « HD/PCA » : construction d'un cluster Proxmox de 3 nœuds et test de panne, avec captures d'écran |
 | [`docs/TP_HAPCA_Santelia_Charles.docx`](docs/TP_HAPCA_Santelia_Charles.docx) | Même compte rendu, format Word |
 | [`docs/TP_HAPCA_SeanceB_Santelia_Charles_FR.pdf`](docs/TP_HAPCA_SeanceB_Santelia_Charles_FR.pdf) | Compte rendu de la séance B : sauvegarde, restauration, RPO et plan de reprise d'activité (PRA) |
